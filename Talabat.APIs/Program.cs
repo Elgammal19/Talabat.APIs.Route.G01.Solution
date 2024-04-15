@@ -37,7 +37,11 @@ namespace Talabat.APIs
 
 			try
 			{
+				// Update Database
 				await _dbContext.Database.MigrateAsync();
+
+				// Data Seeding
+				await StoreContextSeed.SeedAsync(_dbContext);
 			}
 			catch (Exception ex)
 			{
@@ -46,6 +50,8 @@ namespace Talabat.APIs
 			} 
 
 			#endregion
+
+
 
 			#region Configure Kestrel Middlewares
 

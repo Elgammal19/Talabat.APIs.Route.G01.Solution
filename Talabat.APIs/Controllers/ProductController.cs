@@ -27,5 +27,15 @@ namespace Talabat.APIs.Controllers
 		}
 
 		// 2. GetProductById
+		[HttpGet ("{id}")]
+		public async Task<ActionResult<Product>> GetProductById (int id)
+		{
+			var product = await _productRepo.GetByIdAsync (id);
+
+			if (product is null)
+				return NotFound();
+
+			return Ok(product);
+		}
 	}
 }

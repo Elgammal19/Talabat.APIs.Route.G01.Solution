@@ -57,8 +57,6 @@ namespace Talabat.APIs
 
 			#endregion
 
-
-
 			#region Configure Kestrel Middlewares
 
 			// Configure the HTTP request pipeline.
@@ -72,8 +70,9 @@ namespace Talabat.APIs
 
 			app.UseAuthorization();
 
-
 			app.MapControllers(); 
+
+			app.UseStaticFiles();
 
 			#endregion
 

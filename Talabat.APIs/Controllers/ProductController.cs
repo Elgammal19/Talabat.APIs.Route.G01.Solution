@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Talabat.APIs.DTOs;
 using Talabat.Core.Entities;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Specifications;
@@ -11,16 +13,18 @@ namespace Talabat.APIs.Controllers
 	public class ProductController : BaseApiController
 	{
 		private readonly IGenericRepository<Product> _productRepo;
+		private readonly IMapper _mapper;
 
 		// Inject the dependency of Product class that implement the IGenericRepository interface
-		public ProductController(IGenericRepository<Product> productRepo)
+		public ProductController(IGenericRepository<Product> productRepo , IMapper	mapper)
         {
 			_productRepo = productRepo;
+			_mapper = mapper;
 		}
 
 		// 1. GetProducts
 		[HttpGet] // BaseUrl/Api/Product --> GET method
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetProducts()
 		{
 			var spec = new ProductWithBrandAndCategorySpecifications();
 
@@ -29,12 +33,12 @@ namespace Talabat.APIs.Controllers
 			////JsonResult result = new JsonResult(products);
 			//OkObjectResult result = new OkObjectResult(products);
 
-			return Ok(products); // --> Helper Method 
+			return Ok(_mapper.Map<IEnumerable<Product> , IEnumerable<ProductToReturnDto>>(products)); // --> Helper Method 
 		}
 
 		// 2. GetProductById
 		[HttpGet ("{id}")]
-		public async Task<ActionResult<Product>> GetProductById (int id)
+		public async Task<ActionResult<ProductToReturnDto>> GetProductById (int id)
 		{
 			var spec = new ProductWithBrandAndCategorySpecifications(id);
 
@@ -43,7 +47,7 @@ namespace Talabat.APIs.Controllers
 			if (product is null)
 				return NotFound();
 
-			return Ok(product);
+			return Ok(_mapper.Map<Product , ProductToReturnDto>(product));
 		}
 	}
 }

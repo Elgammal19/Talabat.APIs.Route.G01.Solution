@@ -39,6 +39,8 @@ namespace Talabat.APIs.Controllers
 
 		// 2. GetProductById
 		[HttpGet ("{id}")]
+		[ProducesResponseType(typeof(ProductToReturnDto), 200)]
+		[ProducesResponseType(typeof(ApiResponse) ,404 /*StatusCodes.Status404NotFound*/)]
 		public async Task<ActionResult<ProductToReturnDto>> GetProductById (int id)
 		{
 			var spec = new ProductWithBrandAndCategorySpecifications(id);

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Talabat.APIs.Errors;
+using Talabat.APIs.Extensions;
 using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
 using Talabat.Core.Repositories.Contract;
@@ -21,31 +22,39 @@ namespace Talabat.APIs
 			// Add services to the container.
 
 			builder.Services.AddControllers();
+
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-			builder.Services.AddEndpointsApiExplorer();
-			builder.Services.AddSwaggerGen();
+
+			///builder.Services.AddEndpointsApiExplorer();
+			///builder.Services.AddSwaggerGen();
+
+			builder.Services.AddSwaggerServices();
+
 			builder.Services.AddDbContext<StoreContext>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-			}); 
-			builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
-			builder.Services.AddAutoMapper(typeof(MappingProfile));
-			builder.Services.Configure<ApiBehaviorOptions>(options =>
-			{
-				options.InvalidModelStateResponseFactory = (ActionContext) =>
-				{
-					var errors = ActionContext.ModelState.Where(P => P.Value.Errors.Count > 0)
-														 .SelectMany(P => P.Value.Errors)
-														 .Select(E => E.ErrorMessage)
-														 .ToList();
-
-					var response = new ApiValidationErrorResponse()
-					{
-						Errors = errors
-					};
-					return new BadRequestObjectResult(response);
-				};
 			});
+
+			///builder.Services.AddScoped(typeof(IGenericRepository<>) , typeof(GenericRepository<>));
+			///builder.Services.AddAutoMapper(typeof(MappingProfile));
+			///builder.Services.Configure<ApiBehaviorOptions>(options =>
+			///{
+			///	options.InvalidModelStateResponseFactory = (ActionContext) =>
+			///	{
+			///		var errors = ActionContext.ModelState.Where(P => P.Value.Errors.Count > 0)
+			///											 .SelectMany(P => P.Value.Errors)
+			///											 .Select(E => E.ErrorMessage)
+			///											 .ToList();
+			///
+			///		var response = new ApiValidationErrorResponse()
+			///		{
+			///			Errors = errors
+			///		};
+			///		return new BadRequestObjectResult(response);
+			///	};
+			///});
+
+			builder.Services.AddApplicationServices();
 
 
 			#endregion
@@ -83,8 +92,10 @@ namespace Talabat.APIs
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())
 			{
-				app.UseSwagger();
-				app.UseSwaggerUI();
+				///app.UseSwagger();
+				///app.UseSwaggerUI();
+
+				app.UseSwaggerMiddlewares();
 			}
 
 			app.UseStatusCodePagesWithReExecute("/error/{0}");

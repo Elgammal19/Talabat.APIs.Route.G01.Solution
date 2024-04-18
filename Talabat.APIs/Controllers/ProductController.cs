@@ -32,7 +32,7 @@ namespace Talabat.APIs.Controllers
 
 		// 1. GetProducts
 		[HttpGet]			// BaseUrl/api/Product --> GET method
-        public async Task<ActionResult<IEnumerable<ProductToReturnDto>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
 		{
 			var spec = new ProductWithBrandAndCategorySpecifications();
 
@@ -61,7 +61,7 @@ namespace Talabat.APIs.Controllers
 		}
 
 		[HttpGet("brands")]     // BaseUrl/api/Product/brands
-		public async Task<ActionResult<IEnumerable<ProductBrand>>> GetAllBrandsAsync()
+		public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetAllBrandsAsync()
 		{
 			// We are n't using specification here because there 's no navigational properties needed in Brand model
 			var brands = await _brandRepo.GetAllAsync(); 
@@ -70,7 +70,7 @@ namespace Talabat.APIs.Controllers
 		}
 
 		[HttpGet("categories")]  //  BaseUrl/api/Product/categories
-		public async Task<ActionResult<IEnumerable<ProductCategory>>> GetAllCategoriesAsync()
+		public async Task<ActionResult<IReadOnlyList<ProductCategory>>> GetAllCategoriesAsync()
 		{
 			// We are n't using specification here because there 's no navigational properties needed in Brand model
 			var categories = await _categoryRepo.GetAllAsync();

@@ -10,7 +10,10 @@ namespace Talabat.Core.Specifications.Product_Specs
 	public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product>
 	{
 		// Create an Obj. --> Get All Products 
-		public ProductWithBrandAndCategorySpecifications(string? sort) : base()    
+		public ProductWithBrandAndCategorySpecifications(string? sort ,int? brandId , int? categoryId) : base(P => 
+                (!brandId.HasValue    || P.BrandId == brandId) &&
+                (!categoryId.HasValue || P.CategoryId == categoryId)
+        )    
         {
                 Includes.Add(P => P.Brand);
                 Includes.Add(P => P.Category);

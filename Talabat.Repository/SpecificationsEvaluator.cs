@@ -26,6 +26,9 @@ namespace Talabat.Infrastructure
 
 			// Include Expressions --> 1. P => P.Brand  , 2. P => P.Category
 
+			if(spec.IsPaginationEnabled)
+				query = query.Skip(spec.Skip).Take(spec.Take);
+
 			query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => (currentQuery.Include(includeExpression)));
 
 			//  _context.Set<Product>().Where(p => p.Id == id).Include(P => P.Brand)

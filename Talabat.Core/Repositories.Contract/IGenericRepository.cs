@@ -22,5 +22,7 @@ namespace Talabat.Core.Repositories.Contract
 
 		// GetByIdWithSpec
 		Task<T?> GetByIdWithSpecAsync(ISpecifications<T> spec);
+
+		Task<int> GetCountAsync(ISpecifications<T> spec);
 	}
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.DTOs;
 using Talabat.APIs.Errors;
+using Talabat.APIs.Helpers;
 using Talabat.Core.Entities;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Specifications;
@@ -41,7 +42,12 @@ namespace Talabat.APIs.Controllers
 			////JsonResult result = new JsonResult(products);
 			//OkObjectResult result = new OkObjectResult(products);
 
-			return Ok(_mapper.Map<IEnumerable<Product> , IEnumerable<ProductToReturnDto>>(products)); // --> Helper Method 
+			var countSpec = new ProductWithFilterationsForCountSpecifications(specParams);
+			var count = await _productRepo.GetCountAsync(countSpec);
+
+			var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products); // --> Helper Method
+
+			return Ok(new Pagination<ProductToReturnDto>(specParams.PageSize , specParams.PageIndex , count , data));  
 		}
 
 		// 2. GetProductById

@@ -15,10 +15,18 @@ namespace Talabat.Core.Specifications.Product_Specs
 		{
 			get { return pageSize; }
 			set { pageSize = value > MaximumPageSize ? MaximumPageSize : value; }
-		}
+		} 
         public int PageIndex { get; set; }
 
-        public string? Sort { get; set; }
+		private string? search;
+
+		public string? Search
+		{
+			get { return search; }
+			set { search = value.ToLower(); }
+		}
+
+		public string? Sort { get; set; }
         public int? BrandId { get; set; }
         public int? CategoryId { get; set; }
 

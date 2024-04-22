@@ -31,7 +31,7 @@ namespace Talabat.Infrastructure
 		{
 			var createdOrUpdated = await _database.StringSetAsync(basket.Id, JsonSerializer.Serialize(basket), TimeSpan.FromDays(30));
 
-			if(!createdOrUpdated) return null;
+			if(createdOrUpdated is false) return null;
 
 			return await GetBasketAsync(basket.Id);
 		}

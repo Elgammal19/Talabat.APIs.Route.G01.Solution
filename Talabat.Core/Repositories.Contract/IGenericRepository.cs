@@ -11,15 +11,18 @@ namespace Talabat.Core.Repositories.Contract
 	public interface IGenericRepository<T> where T : BaseEntity
 	{
 		// GetAll
-		Task<IEnumerable<T>> GetAllAsync();
+		// IIReadOnlyList --> retrive data from DB without any filteration or needing to iterating on items
+		Task<IReadOnlyList<T>> GetAllAsync();
 
 		// GetById
 		Task<T?> GetByIdAsync(int id);
 
 		// GetAllWithSpec
-		Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecifications<T> spec);
+		Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecifications<T> spec);
 
 		// GetByIdWithSpec
 		Task<T?> GetByIdWithSpecAsync(ISpecifications<T> spec);
+
+		Task<int> GetCountAsync(ISpecifications<T> spec);
 	}
 }

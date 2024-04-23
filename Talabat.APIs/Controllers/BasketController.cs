@@ -19,12 +19,12 @@ namespace Talabat.APIs.Controllers
 			_mapper = mapper;
 		}
 
-		[HttpGet("{id}")] // Get : --> BaseUrl/api/basket/id
-		public async Task<ActionResult<CustomerBasket>> GetBasket(string basketId)
+		[HttpGet] // Get : --> BaseUrl/api/basket
+		public async Task<ActionResult<CustomerBasket>> GetBasket(string id)
 		{
-			var basket = await _basketRepo.GetBasketAsync(basketId);
+			var basket = await _basketRepo.GetBasketAsync(id);
 
-			return Ok(basket ?? new CustomerBasket(basketId));
+			return Ok(basket ?? new CustomerBasket(id));
 		}
 
 		[HttpPost] // Post :   --> BaseUrl/api/basket

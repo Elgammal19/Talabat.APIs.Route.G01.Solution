@@ -20,6 +20,32 @@ namespace Talabat.APIs.Controllers
 
 		#region Sign Up
 
+		[HttpPost("register")] // Post --> BaseUrl/api/Account
+		public async Task<ActionResult<UserDto>> Register(RegisterDto model)
+		{
+			var user = new ApplicationUser()
+			{
+				DispalyName = model.DisplayName ,
+				Email = model.Email,
+				UserName = model.Email.Split('@')[0],
+				PhoneNumber = model.Phone
+			};
+
+			var result = await _userManager.CreateAsync(user, model.Password);
+
+			if (!result.Succeeded) return BadRequest(new ApiValidationErrorResponse()
+			{
+				Errors = result.Errors.Select(error => error.Description)
+			});
+
+			return Ok(new UserDto()
+			{
+				DisplayName = model.DisplayName,
+				Email = model.Email,
+				Token = "This will be token"
+			});
+		}
+
 		#endregion
 
 		#region Sign In

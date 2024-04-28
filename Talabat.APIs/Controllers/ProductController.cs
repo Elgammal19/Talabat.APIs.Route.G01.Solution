@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.DTOs;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Helpers;
-using Talabat.Core.Entities;
+using Talabat.Core.Entities.Product;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Specifications;
 using Talabat.Core.Specifications.Product_Specs;
@@ -12,7 +12,7 @@ using Talabat.Repository;
 
 namespace Talabat.APIs.Controllers
 {
-	public class ProductController : BaseApiController
+    public class ProductController : BaseApiController
 	{
 		private readonly IGenericRepository<Product> _productRepo;
 		private readonly IGenericRepository<ProductBrand> _brandRepo;

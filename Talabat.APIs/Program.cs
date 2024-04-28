@@ -7,6 +7,7 @@ using Talabat.APIs.Extensions;
 using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Infrastructure._Identity;
 using Talabat.Repository;
 using Talabat.Repository.Data;
 
@@ -34,6 +35,11 @@ namespace Talabat.APIs
 			builder.Services.AddDbContext<StoreContext>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+			});
+
+			builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
 			});
 
 			builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
@@ -71,8 +77,12 @@ namespace Talabat.APIs
 			#region Update Database
 
 			using var scope = app.Services.CreateScope();
+
 			var services = scope.ServiceProvider;
+
 			var _dbContext = services.GetRequiredService<StoreContext>();
+
+			var _IdentitydbContext = services.GetRequiredService<ApplicationIdentityDbContext>();
 
 			var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
@@ -80,6 +90,8 @@ namespace Talabat.APIs
 			{
 				// Update Database
 				await _dbContext.Database.MigrateAsync();
+
+				await _IdentitydbContext.Database.MigrateAsync();
 
 				// Data Seeding
 				await StoreContextSeed.SeedAsync(_dbContext);

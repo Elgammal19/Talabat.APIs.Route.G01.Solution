@@ -1,11 +1,14 @@
 
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Extensions;
 using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Infrastructure._Identity;
 using Talabat.Repository;
@@ -67,6 +70,8 @@ namespace Talabat.APIs
 			///	};
 			///});
 
+			builder.Services.AddIdentity<ApplicationUser , IdentityRole>().AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
 			builder.Services.AddApplicationServices();
 
 
@@ -95,6 +100,10 @@ namespace Talabat.APIs
 
 				// Data Seeding
 				await StoreContextSeed.SeedAsync(_dbContext);
+
+				var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+				await ApplicationIdentityDbContextSeed.SeedUserAsync(_userManager);
 			}
 			catch (Exception ex)
 			{

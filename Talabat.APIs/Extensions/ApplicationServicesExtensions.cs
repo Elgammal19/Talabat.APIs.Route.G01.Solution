@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Helpers;
+using Talabat.Application.AuthService;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Core.Services.Contract;
 using Talabat.Infrastructure;
 using Talabat.Repository;
 
@@ -32,6 +34,7 @@ namespace Talabat.APIs.Extensions
 					return new BadRequestObjectResult(response);
 				};
 			});
+			services.AddScoped(typeof(IAuthService), typeof(AuthService));
 
 
 			return services;

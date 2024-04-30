@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Talabat.APIs.DTOs;
 using Talabat.Core.Entities.Basket;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Entities.Product;
 using static System.Net.WebRequestMethods;
 
@@ -22,6 +23,7 @@ namespace Talabat.APIs.Helpers
 
 			CreateMap<CustomerBasketDto, CustomerBasket>();
 			CreateMap<BasketItemDto, BasketItem>();
+			CreateMap<Address, AddressDto>();
 		}
     }
 }

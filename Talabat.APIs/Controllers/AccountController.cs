@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Talabat.APIs.DTOs;
 using Talabat.APIs.Errors;
 using Talabat.Core.Entities.Identity;
@@ -73,6 +75,22 @@ namespace Talabat.APIs.Controllers
 		}
 
 		#endregion
+
+		[Authorize]
+		[HttpGet]
+		public async Task<ActionResult<UserDto>> GetCurrentUser()
+		{
+			var email = User.FindFirstValue(ClaimTypes.Email);
+
+			var user = await _userManager.FindByEmailAsync(email);
+
+			return Ok(new UserDto()
+			{
+				DisplayName = user.DispalyName,
+				Email = user.Email,
+				Token = await _authService.CreateTokenAsync(user, _userManager)
+			});
+		}
 
 	}
 }

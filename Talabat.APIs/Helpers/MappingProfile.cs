@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Talabat.APIs.DTOs;
-using Talabat.Core.Entities;
+using Talabat.Core.Entities.Basket;
+using Talabat.Core.Entities.Identity;
+using Talabat.Core.Entities.Product;
 using static System.Net.WebRequestMethods;
 
 namespace Talabat.APIs.Helpers
 {
-	public class MappingProfile : Profile
+    public class MappingProfile : Profile
 	{
 		//private readonly IConfiguration _configuration;
 
@@ -21,6 +23,7 @@ namespace Talabat.APIs.Helpers
 
 			CreateMap<CustomerBasketDto, CustomerBasket>();
 			CreateMap<BasketItemDto, BasketItem>();
+			CreateMap<Address, AddressDto>().ReverseMap();
 		}
     }
 }

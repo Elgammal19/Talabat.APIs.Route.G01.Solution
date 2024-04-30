@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Talabat.APIs.DTOs;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Helpers;
-using Talabat.Core.Entities;
+using Talabat.Core.Entities.Product;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Specifications;
 using Talabat.Core.Specifications.Product_Specs;
@@ -12,7 +14,7 @@ using Talabat.Repository;
 
 namespace Talabat.APIs.Controllers
 {
-	public class ProductController : BaseApiController
+    public class ProductController : BaseApiController
 	{
 		private readonly IGenericRepository<Product> _productRepo;
 		private readonly IGenericRepository<ProductBrand> _brandRepo;
@@ -31,7 +33,9 @@ namespace Talabat.APIs.Controllers
 			_mapper = mapper;
 		}
 
+
 		// 1. GetProducts
+		[Authorize/*(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)*/]
 		[HttpGet]			// BaseUrl/api/Product --> GET method
         public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams specParams)
 		{
@@ -50,6 +54,7 @@ namespace Talabat.APIs.Controllers
 			return Ok(new Pagination<ProductToReturnDto>(specParams.PageSize , specParams.PageIndex , count , data));  
 		}
 
+
 		// 2. GetProductById
 		[HttpGet ("{id}")]     // BaseUrl/api/Product/id --> GET method
 		[ProducesResponseType(typeof(ProductToReturnDto), 200)]
@@ -66,6 +71,7 @@ namespace Talabat.APIs.Controllers
 			return Ok(_mapper.Map<Product , ProductToReturnDto>(product));
 		}
 
+
 		[HttpGet("brands")]     // BaseUrl/api/Product/brands
 		public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetAllBrandsAsync()
 		{
@@ -74,6 +80,7 @@ namespace Talabat.APIs.Controllers
 
 			return Ok(brands);
 		}
+
 
 		[HttpGet("categories")]  //  BaseUrl/api/Product/categories
 		public async Task<ActionResult<IReadOnlyList<ProductCategory>>> GetAllCategoriesAsync()

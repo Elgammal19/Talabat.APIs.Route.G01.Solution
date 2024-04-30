@@ -1,12 +1,20 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using StackExchange.Redis;
+using System.Text;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Extensions;
 using Talabat.APIs.Helpers;
 using Talabat.APIs.Middlewares;
+using Talabat.Core.Entities.Identity;
 using Talabat.Core.Repositories.Contract;
+using Talabat.Infrastructure._Identity;
 using Talabat.Repository;
 using Talabat.Repository.Data;
 
@@ -22,7 +30,10 @@ namespace Talabat.APIs
 
 			// Add services to the container.
 
-			builder.Services.AddControllers();
+			builder.Services.AddControllers().AddNewtonsoftJson(options =>
+			{
+				options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore ;
+			});
 
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
@@ -34,6 +45,11 @@ namespace Talabat.APIs
 			builder.Services.AddDbContext<StoreContext>(options =>
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+			});
+
+			builder.Services.AddDbContext<ApplicationIdentityDbContext>(options =>
+			{
+				options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
 			});
 
 			builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
@@ -61,8 +77,11 @@ namespace Talabat.APIs
 			///	};
 			///});
 
+			builder.Services.AddIdentity<ApplicationUser , IdentityRole>().AddEntityFrameworkStores<ApplicationIdentityDbContext>();
+
 			builder.Services.AddApplicationServices();
 
+			builder.Services.AddAuthServices(builder.Configuration);
 
 			#endregion
 
@@ -71,8 +90,12 @@ namespace Talabat.APIs
 			#region Update Database
 
 			using var scope = app.Services.CreateScope();
+
 			var services = scope.ServiceProvider;
+
 			var _dbContext = services.GetRequiredService<StoreContext>();
+
+			var _IdentitydbContext = services.GetRequiredService<ApplicationIdentityDbContext>();
 
 			var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
@@ -81,8 +104,14 @@ namespace Talabat.APIs
 				// Update Database
 				await _dbContext.Database.MigrateAsync();
 
+				await _IdentitydbContext.Database.MigrateAsync();
+
 				// Data Seeding
 				await StoreContextSeed.SeedAsync(_dbContext);
+
+				var _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+				await ApplicationIdentityDbContextSeed.SeedUserAsync(_userManager);
 			}
 			catch (Exception ex)
 			{
@@ -109,11 +138,14 @@ namespace Talabat.APIs
 
 			app.UseHttpsRedirection();
 
+			app.UseStaticFiles();
+
+			app.UseAuthentication();
+
 			app.UseAuthorization();
 
 			app.MapControllers(); 
 
-			app.UseStaticFiles();
 
 			#endregion
 

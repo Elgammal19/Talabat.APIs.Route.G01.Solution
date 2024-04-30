@@ -1,9 +1,12 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.Text;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Extensions;
 using Talabat.APIs.Helpers;
@@ -74,6 +77,7 @@ namespace Talabat.APIs
 
 			builder.Services.AddApplicationServices();
 
+			builder.Services.AddAuthServices(builder.Configuration);
 
 			#endregion
 
@@ -130,11 +134,14 @@ namespace Talabat.APIs
 
 			app.UseHttpsRedirection();
 
+			app.UseStaticFiles();
+
+			app.UseAuthentication();
+
 			app.UseAuthorization();
 
 			app.MapControllers(); 
 
-			app.UseStaticFiles();
 
 			#endregion
 

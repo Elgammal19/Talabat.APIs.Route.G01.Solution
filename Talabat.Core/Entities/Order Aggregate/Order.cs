@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Talabat.Core.Entities.Order_Aggregate
-{
+{ 
 	public class Order : BaseEntity
 	{
 		// To confirm this order is for this user by checking the email & id from token 
@@ -14,7 +14,7 @@ namespace Talabat.Core.Entities.Order_Aggregate
 		// To sole the issue of the differnce of the time in server time & user time when creating the order 
 		public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
 
-		public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+		public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
         public Address ShippingAddress { get; set; } = null!;
 

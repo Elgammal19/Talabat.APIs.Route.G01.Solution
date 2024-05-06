@@ -13,3 +13,4 @@ namespace Talabat.Core.Entities.Order_Aggregate
         public int Quantity { get; set; }
     }
 }
+ 

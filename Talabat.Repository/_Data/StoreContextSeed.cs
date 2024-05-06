@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Talabat.Core.Entities.Order_Aggregate;
 using Talabat.Core.Entities.Product;
 
 namespace Talabat.Repository.Data
@@ -19,7 +20,7 @@ namespace Talabat.Repository.Data
 			{
 				// Brands :
 				// 1. Read Data from jsaon file
-				var brandsData = File.ReadAllText("../Talabat.Repository/Data/DataSeed/brands.json");
+				var brandsData = File.ReadAllText("../Talabat.Repository/_Data/DataSeed/brands.json");
 
 				// 2 . Convert json string to ProductBrand type 
 				var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
@@ -43,7 +44,7 @@ namespace Talabat.Repository.Data
             {
 				// Category
 				// 1. Read data from json file
-				var categoryData = File.ReadAllText("../Talabat.Repository/Data/DataSeed/categories.json");
+				var categoryData = File.ReadAllText("../Talabat.Repository/_Data/DataSeed/categories.json");
 
 				// 2. Convert json string to ProductCategory type
 				var categories = JsonSerializer.Deserialize<List<ProductCategory>>(categoryData);
@@ -67,7 +68,7 @@ namespace Talabat.Repository.Data
             {
 				// Product
 				// 1. Read data from json file
-				var productData = File.ReadAllText("../Talabat.Repository/Data/DataSeed/products.json");
+				var productData = File.ReadAllText("../Talabat.Repository/_Data/DataSeed/products.json");
 
 				// 2. Convert json strings to Product type
 				var products = JsonSerializer.Deserialize<List<Product>>(productData);
@@ -78,6 +79,30 @@ namespace Talabat.Repository.Data
 					foreach (var product in products)
 					{
 						_dbContext.Set<Product>().Add(product);
+					}
+					await _dbContext.SaveChangesAsync();
+				}
+			}
+
+			#endregion
+
+			#region DeliveryMethodSeeding
+
+			if (_dbContext.DeliveryMethods.Count() == 0)
+			{
+				// DeliveryMethods
+				// 1. Read data from json file
+				var deliveryMethodsData = File.ReadAllText("../Talabat.Repository/_Data/DataSeed/delivery.json");
+
+				// 2. Convert json strings to Product type
+				var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryMethodsData);
+
+				// 3. Add data to Product table
+				if (deliveryMethods?.Count() > 0)
+				{
+					foreach (var deliveryMethod in deliveryMethods)
+					{
+						_dbContext.Set<DeliveryMethod>().Add(deliveryMethod);
 					}
 					await _dbContext.SaveChangesAsync();
 				}

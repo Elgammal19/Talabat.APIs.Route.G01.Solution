@@ -8,8 +8,24 @@ namespace Talabat.Core.Entities.Order_Aggregate
 { 
 	public class Order : BaseEntity
 	{
+		//	Parameter less constructor for EF core to generate migrations
+		private Order()
+        {
+            
+        }
+
+        public Order(string buyerEmail, Address shippingAddress, DeliveryMethod? deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
+		{
+			BuyerEmail = buyerEmail;
+			ShippingAddress = shippingAddress;
+			DeliveryMethod = deliveryMethod;
+			Items = items;
+			SubTotal = subTotal;
+		}
+
+
 		// To confirm this order is for this user by checking the email & id from token 
-        public string BuyerEmail { get; set; } = null!;
+		public string BuyerEmail { get; set; } = null!;
 
 		// To sole the issue of the differnce of the time in server time & user time when creating the order 
 		public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;

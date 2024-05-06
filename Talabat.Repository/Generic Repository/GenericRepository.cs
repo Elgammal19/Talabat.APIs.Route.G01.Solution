@@ -23,6 +23,15 @@ namespace Talabat.Repository
 			_context = context;
 		}
 
+		public void Add(T entity)
+			=> _context.Set<T>().Add(entity);
+
+		public void Update(T entity)
+			=> _context.Set<T>().Update(entity);
+
+		public void Delete(T entity)
+			=> _context.Set<T>().Remove(entity);
+
 		public async Task<IReadOnlyList<T>> GetAllAsync()
 		{
 			if(typeof(T) == typeof(Product))

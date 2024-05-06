@@ -25,7 +25,7 @@ namespace Talabat.Core.Entities.Order_Aggregate
 		/// </summary>
 
 		// Navigational Property [one] --> For DeliveryMethod tabel
-		public DeliveryMethod DeliveryMethod { get; set; } = null!;
+		public DeliveryMethod? DeliveryMethod { get; set; } = null!;
 
 		// Navigational Property [Many] --> For OrderItem tabel
 		public ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>();

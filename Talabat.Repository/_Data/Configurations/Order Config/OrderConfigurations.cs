@@ -21,7 +21,9 @@ namespace Talabat.Infrastructure._Data.Configurations.Order_Config
 					(OStatus) => (OrderStatus)Enum.Parse(typeof(OrderStatus), OStatus) // Return type from DB as Enum
 				);
 
-			builder.HasOne(order => order.DeliveryMethod).WithMany();
+			builder.HasOne(order => order.DeliveryMethod).WithMany().OnDelete(DeleteBehavior.SetNull);
+
+			builder.HasMany(order => order.Items).WithOne().OnDelete(DeleteBehavior.Cascade);
 
 			builder.Property(order => order.SubTotal).HasColumnType("decimal(12,2)");
 		}

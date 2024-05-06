@@ -5,6 +5,7 @@ using System.Text;
 using Talabat.APIs.Errors;
 using Talabat.APIs.Helpers;
 using Talabat.Application.AuthService;
+using Talabat.Core;
 using Talabat.Core.Repositories.Contract;
 using Talabat.Core.Services.Contract;
 using Talabat.Infrastructure;
@@ -16,10 +17,11 @@ namespace Talabat.APIs.Extensions
 	{
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services)
 		{
+			services.AddScoped(typeof(IUnitOfWork) , typeof(UnitOfWork));
 
 			services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
 
-			services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			//services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			services.AddAutoMapper(typeof(MappingProfile));
 			services.Configure<ApiBehaviorOptions>(options =>
 			{
@@ -70,5 +72,6 @@ namespace Talabat.APIs.Extensions
 
 			return services;
 		}
+
 	}
 }

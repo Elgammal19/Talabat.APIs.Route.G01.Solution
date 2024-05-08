@@ -22,6 +22,7 @@ namespace Talabat.Application.OrderService
 
 		public OrderService(IBasketRepository basketRepo ,
 							IUnitOfWork unitOfWork
+			                /// To select more than one line and write in them in same place and at the same time [Alt + Shift]
 							///IGenericRepository<Product> productRepo ,
 							///IGenericRepository<DeliveryMethod> deliveryMethodRepo ,
 							///IGenericRepository<Order> orderRepo
@@ -34,7 +35,7 @@ namespace Talabat.Application.OrderService
 			///_orderRepo = orderRepo;
 		}
 
-        public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
+        public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, OrderAddress shippingAddress)
 		{
 			// 1.Get Basket From Baskets Repo
 
@@ -46,13 +47,15 @@ namespace Talabat.Application.OrderService
 
 			if(basket?.Items?.Count > 0)
 			{
-				foreach(var item in basket.Items)
+				var productRepository = _unitOfWork.Repository<Product>();
+
+				foreach (var item in basket.Items)
 				{
 					// Create OrderItem for each item 
 
-					var product = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
+					var product = await productRepository.GetByIdAsync(item.Id);
 
-					var productItemOrdered = new ProductItemOrdered(product.Id, product.Name, product.PictureUrl);
+					var productItemOrdered = new ProductItemOrdered(item.Id, product.Name, product.PictureUrl);
 
 					var orderItem = new OrderItem(productItemOrdered, product.Price, item.Quantity);
 
@@ -89,7 +92,7 @@ namespace Talabat.Application.OrderService
 			if(result <= 0 ) return null;
 
 			return order;
-
+			 
 		}
 
 		public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()

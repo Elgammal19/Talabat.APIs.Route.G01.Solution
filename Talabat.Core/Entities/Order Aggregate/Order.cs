@@ -14,7 +14,7 @@ namespace Talabat.Core.Entities.Order_Aggregate
             
         }
 
-        public Order(string buyerEmail, Address shippingAddress, DeliveryMethod? deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
+        public Order(string buyerEmail, OrderAddress shippingAddress, DeliveryMethod? deliveryMethod, ICollection<OrderItem> items, decimal subTotal)
 		{
 			BuyerEmail = buyerEmail;
 			ShippingAddress = shippingAddress;
@@ -32,7 +32,7 @@ namespace Talabat.Core.Entities.Order_Aggregate
 
 		public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
-        public Address ShippingAddress { get; set; } = null!;
+        public OrderAddress ShippingAddress { get; set; } = null!;
 
 		/// Foregin key for the DeliveryMethod tabele --> DeliveryMethod[one] : Order[Many]
 		/// To know which method order will be drived to the user

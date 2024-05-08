@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Talabat.Core.Entities.Order_Aggregate
 {
-	public class Address   // --> Composite Attribute
+	public class OrderAddress   // --> Composite Attribute
 	{
 		// required --> C# Keyword make the property can't be initialized with null
 		// && != [Required] --> Data Annotaion make this column rquired in DB & used for validation

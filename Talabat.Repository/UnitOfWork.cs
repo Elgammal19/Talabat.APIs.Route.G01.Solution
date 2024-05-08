@@ -19,7 +19,7 @@ namespace Talabat.Infrastructure
 		private readonly StoreContext _dbContext;
 
 		//private Dictionary<string , GenericRepository<BaseEntity>> _repository;
-		private Hashtable _repository;
+		private Hashtable _repositories;
 
 		///	public IGenericRepository<Product> ProductsRepo { get; set; }
 		///	public IGenericRepository<ProductBrand> BrandsRepo { get; set; }
@@ -41,20 +41,20 @@ namespace Talabat.Infrastructure
 			///	OrderItemsRepo = new GenericRepository<OrderItem>(_dbContext);
 			///	OrdersRepo = new GenericRepository<Order>(_dbContext);
 
-			_repository = new Hashtable() /* new Dictionary<string, GenericRepository<BaseEntity>>()*/;
+			_repositories = new Hashtable() /* new Dictionary<string, GenericRepository<BaseEntity>>()*/;
 		}
 
 		public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
 		{
 			var key = typeof(TEntity).Name;
 
-			if( !_repository.ContainsKey(key) )
+			if( !_repositories.ContainsKey(key) )
 			{
 				var repository = new GenericRepository<TEntity>(_dbContext) ;
 
-				_repository.Add(key , repository);
+				_repositories.Add(key , repository);
 			}
-			return _repository[key] as IGenericRepository<TEntity>;
+			return _repositories[key] as IGenericRepository<TEntity>;
 		}
 
 		public async Task<int> CompleteAsync()

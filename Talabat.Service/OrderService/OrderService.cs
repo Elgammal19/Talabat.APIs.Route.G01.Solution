@@ -121,10 +121,8 @@ namespace Talabat.Application.OrderService
 			return order;
 		}
 
-		public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+			=> await _unitOfWork.Repository<DeliveryMethod>().GetAllAsync();
 
 
 	}

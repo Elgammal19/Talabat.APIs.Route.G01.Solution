@@ -30,5 +30,6 @@ namespace Talabat.APIs.Helpers
 
 			CreateMap<OrderAddressDto, OrderAddress>();
 		}
+
     }
 }
